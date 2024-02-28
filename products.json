@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "remera",
+    "description": "Este es un producto prueba",
+    "price": 200,
+    "thumbnail": "Sin imagen",
+    "code": "abc123",
+    "stock": 25
+  },
+  {
+    "id": 2,
+    "title": "pantalon",
+    "description": "Este es otro un producto prueba",
+    "price": 400,
+    "thumbnail": "Otra sin imagen",
+    "code": "def456",
+    "stock": 18
+  },
+  {
+    "id": 3,
+    "title": "gorra",
+    "description": "Este es otro un producto prueba",
+    "price": 600,
+    "thumbnail": "Otra sin imagen",
+    "code": "ghi789",
+    "stock": 15
+  },
+  {
+    "id": 4,
+    "title": "campera",
+    "description": "Este es otro un producto prueba",
+    "price": 800,
+    "thumbnail": "Otra sin imagen",
+    "code": "jkl123",
+    "stock": 10
+  },
+  {
+    "id": 5,
+    "title": "medias",
+    "description": "Este es otro un producto prueba",
+    "price": 50,
+    "thumbnail": "Otra sin imagen",
+    "code": "mno456",
+    "stock": 30
+  },
+  {
+    "id": 6,
+    "title": "bufanda",
+    "description": "Este es otro un producto prueba",
+    "price": 100,
+    "thumbnail": "Otra sin imagen",
+    "code": "pqr789",
+    "stock": 20
+  },
+  {
+    "id": 7,
+    "title": "sombrero",
+    "description": "Este es otro un producto prueba",
+    "price": 120,
+    "thumbnail": "Otra sin imagen",
+    "code": "stu012",
+    "stock": 22
+  },
+  {
+    "id": 8,
+    "title": "guantes",
+    "description": "Este es otro un producto prueba",
+    "price": 80,
+    "thumbnail": "Otra sin imagen",
+    "code": "vwx345",
+    "stock": 28
+  },
+  {
+    "id": 9,
+    "title": "musculosa",
+    "description": "Este es otro un producto prueba",
+    "price": 700,
+    "thumbnail": "Otra sin imagen",
+    "code": "yzab67",
+    "stock": 12
+  },
+  {
+    "id": 10,
+    "title": "lentes",
+    "description": "Este es otro un producto prueba",
+    "price": 150,
+    "thumbnail": "Otra sin imagen",
+    "code": "cdef89",
+    "stock": 15
+  }
+]
