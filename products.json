@@ -6,25 +6,20 @@
     "price": 200,
     "thumbnail": "Sin imagen",
     "code": "abc123",
-    "stock": 25
+    "stock": 25,
+    "category": "ropa",
+    "status": true
   },
   {
     "id": 2,
     "title": "pantalon",
     "description": "Este es otro un producto prueba",
-    "price": 400,
+    "price": 500,
     "thumbnail": "Otra sin imagen",
     "code": "def456",
-    "stock": 18
-  },
-  {
-    "id": 3,
-    "title": "gorra",
-    "description": "Este es otro un producto prueba",
-    "price": 600,
-    "thumbnail": "Otra sin imagen",
-    "code": "ghi789",
-    "stock": 15
+    "stock": 18,
+    "category": "ropa",
+    "status": true
   },
   {
     "id": 4,
@@ -33,7 +28,9 @@
     "price": 800,
     "thumbnail": "Otra sin imagen",
     "code": "jkl123",
-    "stock": 10
+    "stock": 10,
+    "category": "ropa",
+    "status": true
   },
   {
     "id": 5,
@@ -42,7 +39,9 @@
     "price": 50,
     "thumbnail": "Otra sin imagen",
     "code": "mno456",
-    "stock": 30
+    "stock": 30,
+    "category": "ropa",
+    "status": true
   },
   {
     "id": 6,
@@ -51,7 +50,9 @@
     "price": 100,
     "thumbnail": "Otra sin imagen",
     "code": "pqr789",
-    "stock": 20
+    "stock": 20,
+    "category": "accesorios",
+    "status": true
   },
   {
     "id": 7,
@@ -60,7 +61,9 @@
     "price": 120,
     "thumbnail": "Otra sin imagen",
     "code": "stu012",
-    "stock": 22
+    "stock": 22,
+    "category": "accesorios",
+    "status": true
   },
   {
     "id": 8,
@@ -69,7 +72,9 @@
     "price": 80,
     "thumbnail": "Otra sin imagen",
     "code": "vwx345",
-    "stock": 28
+    "stock": 28,
+    "category": "accesorios",
+    "status": true
   },
   {
     "id": 9,
@@ -78,7 +83,9 @@
     "price": 700,
     "thumbnail": "Otra sin imagen",
     "code": "yzab67",
-    "stock": 12
+    "stock": 12,
+    "category": "ropa",
+    "status": true
   },
   {
     "id": 10,
@@ -87,6 +94,78 @@
     "price": 150,
     "thumbnail": "Otra sin imagen",
     "code": "cdef89",
-    "stock": 15
+    "stock": 15,
+    "category": "accesorios",
+    "status": true
+  },
+  {
+    "id": 11,
+    "title": "Producto de ejemplo",
+    "description": "Esta es una descripción de ejemplo",
+    "code": "ABC123",
+    "price": 99.99,
+    "stock": 10,
+    "category": "Electrónicos",
+    "thumbnails": [
+      "url1",
+      "url2"
+    ],
+    "status": true
+  },
+  {
+    "id": 12,
+    "title": "Producto de ejemplo",
+    "description": "Esta es una descripción de ejemplo",
+    "code": "hrdhdr",
+    "price": 60,
+    "stock": 10,
+    "category": "flores",
+    "thumbnails": [
+      "url1",
+      "url2"
+    ],
+    "status": true
+  },
+  {
+    "id": 13,
+    "title": "birome",
+    "description": "birome azul trazo fino",
+    "code": "vbvgae",
+    "price": 500,
+    "stock": 10,
+    "category": "útiles escolares",
+    "thumbnails": [
+      "url1",
+      "url2"
+    ],
+    "status": true
+  },
+  {
+    "id": 14,
+    "title": "birome negra",
+    "description": "birome negra trazo fino",
+    "code": "ghrfhhjj",
+    "price": 500,
+    "stock": 10,
+    "category": "útiles escolares",
+    "thumbnails": [
+      "url1",
+      "url2"
+    ],
+    "status": true
+  },
+  {
+    "id": 15,
+    "title": "birome negra",
+    "description": "birome negra trazo fino",
+    "code": "ghrfhhjj",
+    "price": 500,
+    "stock": 10,
+    "category": "útiles escolares",
+    "thumbnails": [
+      "url1",
+      "url2"
+    ],
+    "status": true
   }
 ]
