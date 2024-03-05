@@ -37,7 +37,7 @@ class ProductManager {
         } catch (error) {
             if (error.code === 'ENOENT') {
                 await this.saveProductsToFile();
-                console.log('El archivo products.json ha sido creado.');
+                console.log('The file products.json has been created.');
                 return;
             }
             console.error('Error loading products from file:', error);
@@ -46,7 +46,7 @@ class ProductManager {
 
     async addProduct(title, description, code, price, stock, category, thumbnails) {
         if (!title || !description || !code || !price || !stock || !category) {
-            throw new Error("Todos los campos son obligatorios, excepto thumbnails.");
+            throw new Error("All fields are mandatory, except thumbnails.");
         }
     
         const newProduct = {

@@ -38,7 +38,7 @@ class CartManager {
         } catch (error) {
             if (error.code === 'ENOENT') {
                 await this.saveCartsToFile();
-                console.log('El archivo carts.json ha sido creado.');
+                console.log('The file carts.json has been created.');
                 return;
             }
             console.error('Error loading carts from file:', error);

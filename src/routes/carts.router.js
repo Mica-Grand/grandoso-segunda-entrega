@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
         const newCart = await cartManager.createCart();
         res.status(201).json(newCart);
     } catch (error) {
-        console.error('Error al crear el carrito:', error);
+        console.error('Error while creating a new cart: ', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
@@ -19,13 +19,13 @@ router.get('/:cid', async (req, res) => {
         const cartId = parseInt(req.params.cid);
         const cart = await cartManager.getCartById(cartId);
         if (!cart) {
-            res.status(404).json({ error: `El carrito con el id ${cartId} no existe` });
+            res.status(404).json({ error: `The cart with id ${cartId} does not exist` });
             return;
         }
         res.json(cart);
     } catch (error) {
-        console.error('Error al obtener el carrito:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error while retrieving the cart:', error);
+        res.status(500).json({ error: 'Server internal error' });
     }
 });
 
@@ -37,13 +37,13 @@ router.post('/:cid/product/:pid', async (req, res) => {
 
         const added = await cartManager.addProductToCart(cartId, productId, quantity);
         if (added) {
-            res.json({ message: `Producto con ID ${productId} agregado al carrito correctamente` });
+            res.json({ message: `The product with ID ${productId} has been succesfully added to the cart` });
         } else {
-            res.status(404).json({ error: `El carrito con el id ${cartId} no existe` });
+            res.status(404).json({ error: `The cart with id ${cartId} does not exist` });
         }
     } catch (error) {
-        console.error('Error al agregar el producto al carrito:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error while adding  a product to the cart:', error);
+        res.status(500).json({ error: 'Server Internal error' });
     }
 });
 
