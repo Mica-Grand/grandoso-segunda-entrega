@@ -1,65 +1,29 @@
 const { Router } = require('express');
 const router = Router();
-const ProductManager = require('../ProductManager');
 
-const manager = new ProductManager(`${__dirname}/../../assets/products.json`);
-
-router.get('/realtimeproducts', async (_, res) => {
+router.get('/', async (req, res) => {
     try {
-
-        const products = await manager.getProducts();
-
-        const productsData = products.map(product => ({
-            title: product.title,
-            thumbnail: product.thumbnail,
-            description: product.description,
-            price: product.price,
-            stock: product.stock,
-            code: product.code
-        }));
-
-       
-        res.render('realTimeProducts', {
-            title: 'Productos en tiempo real',
-            products: products,
-            useWS: true,
-            styles: [ 'index.css'],
-            scripts: ['index.js'],
-        });
+        const productManager = req.app.get("productManager");
+        const productsData = await productManager.getAll(req.query);
+        res.render('products', { productsData });
     } catch (error) {
-        console.error('Error al obtener los productos:', error);
-        res.status(500).send('Error al cargar los productos');
+        console.error('Error while retrieving the list of products: ', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-router.get('/', async (_, res) => {
+router.get('/:pid', async (req, res) => {
     try {
-        const products = await manager.getProducts();
-
-        const productsData = products.map(product => ({
-            title: product.title,
-            thumbnail: product.thumbnail,
-            description: product.description,
-            price: product.price,
-            stock: product.stock,
-            code: product.code
-        }));
-
-        res.render('home', {
-            products: productsData,
-            useWS: false,
-            styles: [ 'index.css'],
-            scripts: ['index.js'],
-        });
-        } catch (err) {
-            console.log(err);
-            return res.status(404).send({message:'No se encontraron productos'})
+        const productManager = req.app.get("productManager");
+        const product = await productManager.getProductById(req.params.pid);
+        res.render('product-details', { product });
+    } catch (error) {
+        console.error('Error getting product by ID:', error);
+        if (error.message === 'Product not found') {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.status(500).json({ error: 'Internal server error' });
     }
-        
-
 });
 
-module.exports = {
-    router,
-    manager: manager
-};
+module.exports = router;

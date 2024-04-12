@@ -1,52 +1,65 @@
-const express = require('express');
-const viewsRouter = require('./routes/views.router');
-const handlebars = require('express-handlebars');
-const {Server} = require('socket.io');
-const manager = viewsRouter.manager; 
+const express = require('express')
+const handlebars = require('express-handlebars')
+const mongoose = require('mongoose')
 
-const app = express();
-const PORT = 8080;
+const ProductManager = require('./dao/dbManagers/productManager')
+const CartManager = require('./dao/dbManagers/cartManager')
 
-//handlebars
-app.engine('handlebars', handlebars.engine());
-app.set('views', `${__dirname}/views`);
-app.set('view engine', 'handlebars');
+const app = express()
 
-app.use(express.static(`${__dirname}/../public`));
+const viewsRouter = require('./routes/views.router')
+const productsRouter = require('./routes/products.router')
+const cartRouter = require('./routes/carts.router')
 
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// configurar handlebars
+app.engine('handlebars', handlebars.engine())
+app.set('views', `${__dirname}/views`)
+app.set('view engine', 'handlebars')
 
-// Routes
+app.use(express.static(`${__dirname}/public`))
+app.use(express.json())
 
-app.use('/', viewsRouter);
+app.use('/', viewsRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/cart', cartRouter)
 
-const httpServer = app.listen(PORT, () => {
-    console.log(`Server now listening on port ${PORT}`);
-});
 
-//servidor WS
-const wsServer = new Server(httpServer);
-app.set('ws', wsServer)
+const connectToDatabase = async () => {
+    try {
+        await mongoose.connect('mongodb+srv://el12del8:Ramiro20@codertest.jek84kt.mongodb.net/', {
+            dbName: 'ecommerce'
+        })
 
-wsServer.on('connection', (socket) => {
-    console.log('Nuevo cliente conectado via WebSocket');
-    socket.on('addProduct', async (product) => {
-        try {
-            const { title, description, thumbnails, code, category } = product;
-            const price = parseInt(product.price);
-            const stock = parseInt(product.stock);
-            if (!title || !description || !code || !price || isNaN(stock) || stock < 0 || !category) {
-                return res.status(400).json({ error: 'All fields are required except thumbnails' });
-            }
+        const productManager = new ProductManager()
+        await productManager.prepare()
 
-            await ProductManager.addProduct(title, description, price, thumbnails, code, stock, category);
-            console.log('Added product:', product);
-            wsServer.emit('newProductAdded', product);
+        const cartManager = new CartManager()
+        await cartManager.prepare()
 
-        } catch (error) {
-            console.error('Error al agregar el producto:', error);
-        }
-    });
-})
+        // Puedes exportar los managers si es necesario
+        return { productManager, cartManager }
+    } catch (error) {
+        console.error('Error connecting to the database:', error)
+        throw error
+    }
+}
+
+const startServer = async () => {
+    try {
+        const { productManager, cartManager } = await connectToDatabase()
+
+        app.set('productManager', productManager)
+        app.set('cartManager', cartManager)
+
+        const PORT = process.env.PORT || 8080
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`)
+        })
+    } catch (error) {
+        console.error('Error starting the server:', error)
+        process.exit(1)
+    }
+}
+
+startServer()

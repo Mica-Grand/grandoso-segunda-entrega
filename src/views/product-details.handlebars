@@ -1,0 +1,9 @@
+<h1>Product Details</h1>
+    <img src="{{product.thumbnail}}" alt="{{product.title}} Thumbnail">
+    <h2>{{product.title}}</h2>
+    <p>{{product.description}}</p>
+    <p>Price: {{product.price}}</p>
+    <p>Category: {{product.category}}</p>
+    <form action="/carts/{{cartId}}/products/{{product._id}}" method="POST">
+        <button type="submit">Add to Cart</button>
+    </form>
