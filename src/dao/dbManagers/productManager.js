@@ -1,11 +1,12 @@
-const Products = require('../models/product.model');
+const ProductModel = require('../models/product.model');
+
 
 class ProductManager {
     constructor() {}
 
     async prepare() {
       
-        if (Products.db.readyState !== 1) {
+        if (ProductModel.db.readyState !== 1) {
             throw new Error('must connect to mongodb!')
         }
     }
@@ -13,75 +14,43 @@ class ProductManager {
 
     async getAll(queryParams) {
         try {
-            let { limit = 10, page = 1, sort, category, availability } = queryParams;
-    
-            limit = parseInt(limit);
-            page = parseInt(page);
-    
-            const skip = (page - 1) * limit;
-    
-            let queryOptions = {};
-    
-            if (category) {
-                queryOptions.category = category;
-            }
-    
-            if (availability) {
-                queryOptions.status = availability === 'available' ? true : false;
-            }
-    
-            let productsQuery = Product.find(queryOptions);
-    
-            if (sort) {
-                let sortOption = {};
-                switch (sort) {
-                    case 'asc':
-                        sortOption = { price: 1 };
-                        break;
-                    case 'desc':
-                        sortOption = { price: -1 };
-                        break;
-                    default:
-                        break;
-                }
-                productsQuery = productsQuery.sort(sortOption);
-            }
-    
-            const totalProducts = await Product.countDocuments(queryOptions);
-            const totalPages = Math.ceil(totalProducts / limit);
-    
-            const products = await productsQuery.skip(skip).limit(limit);
-    
-            const hasPrevPage = page > 1;
-            const hasNextPage = page < totalPages;
-            const prevPage = page - 1;
-            const nextPage = page + 1;
-            const prevLink = hasPrevPage ? `/products?page=${prevPage}&limit=${limit}` : null;
-            const nextLink = hasNextPage ? `/products?page=${nextPage}&limit=${limit}` : null;
-    
+            let { page = 1, limit = 10, sort, category, availability } = queryParams;
+            const options = {
+                sort: sort ? { price: sort } : undefined,
+                limit: parseInt(limit),
+                page: parseInt(page),
+                lean: true
+            };
+            const queryObject = {};
+
+        if (category) {
+            queryObject.category = { $regex: new RegExp(category, 'i') };        }
+
+        if (availability !== undefined) {
+            queryObject.availability = availability === 'true'; 
+        }
+
+            const products = await ProductModel.paginate(queryObject, options);
+
             return {
                 status: 'success',
-                products,
-                totalPages,
-                currentPage: page,
-                hasPrevPage,
-                hasNextPage,
-                prevPage,
-                nextPage,
-                prevLink,
-                nextLink
+                payload: products.docs,
+                totalPages: products.totalPages,
+                prevPage: products.prevPage,
+                nextPage: products.nextPage,
+                page: products.page,
+                hasPrevPage: products.hasPrevPage,
+                hasNextPage: products.hasNextPage
             };
         } catch (error) {
             console.error('Error getting products:', error);
             throw new Error('Internal server error');
         }
     }
-    
-    
 
     async getProductById(id) {
         try {
-            const product = await Product.findById(id);
+            const product = await ProductModel.findById(id).lean();
             if (!product) {
                 throw new Error('Product not found');
             }
@@ -94,7 +63,7 @@ class ProductManager {
 
     async addProduct(title, description, code, price, stock, category, thumbnails) {
         try {
-            const newProduct = new Product({
+            const newProduct = new ProductModel({
                 title,
                 description,
                 code,
@@ -113,7 +82,7 @@ class ProductManager {
 
     async updateProduct(id, updatedFields) {
         try {
-            const updatedProduct = await Product.findByIdAndUpdate(id, updatedFields, { new: true });
+            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updatedFields, { new: true });
             if (!updatedProduct) {
                 throw new Error('Product not found');
             }
@@ -126,7 +95,7 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
-            const deletedProduct = await Product.findByIdAndDelete(id);
+            const deletedProduct = await ProductModel.findByIdAndDelete(id);
             if (!deletedProduct) {
                 throw new Error('Product not found');
             }

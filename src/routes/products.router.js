@@ -6,36 +6,21 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
         const productManager = req.app.get('productManager');
-
-        const productsData = await productManager.getAll(req.query);
-
-        const {
-            status,
-            products,
-            totalPages,
-            prevPage,
-            nextPage,
-            page,
-            hasPrevPage,
-            hasNextPage,
-            prevLink,
-            nextLink
-        } = productsData;
+        const { limit = 10, page = 1, sort, category, availability } = req.query;
+        const productsData = await productManager.getAll({ limit, page, sort, category, availability });
 
         res.json({
-            status,
-            payload: products,
-            totalPages,
-            prevPage,
-            nextPage,
-            page,
-            hasPrevPage,
-            hasNextPage,
-            prevLink,
-            nextLink
+            status: 'success',
+            payload: productsData.payload,
+            totalPages: productsData.totalPages,
+            prevPage: productsData.prevPage,
+            nextPage: productsData.nextPage,
+            page: productsData.page,
+            hasPrevPage: productsData.hasPrevPage,
+            hasNextPage: productsData.hasNextPage
         });
     } catch (error) {
-        console.error('Error while retrieving the list of products: ', error);
+        console.error('Error getting products:', error);
         res.status(500).json({ status: 'error', error: 'Internal server error' });
     }
 });
@@ -59,14 +44,15 @@ router.post('/', async (req, res) => {
     try {
         const productManager = req.app.get('productManager');
 
-        const { title, description, code, price, stock, category, thumbnails } = req.body;
-        const newProduct = await productManager.addProduct(title, description, code, price, stock, category, thumbnails);
+        const { title, description, code, price, stock, category, thumbnails, availability } = req.body;
+        const newProduct = await productManager.addProduct(title, description, code, price, stock, category, thumbnails, availability);
         res.status(201).json({ status: 'success', payload: newProduct });
     } catch (error) {
         console.error('Error creating new product:', error);
         res.status(500).json({ status: 'error', error: 'Internal server error' });
     }
 });
+
 
 router.put('/:pid', async (req, res) => {
     try {

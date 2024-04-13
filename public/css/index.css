@@ -1,0 +1,15 @@
+
+
+.product-image {
+    width: 150px;
+    height: 150px;
+};
+
+.title {
+    color: blue;
+    text-transform: uppercase;
+}
+
+.margin {
+    margin-bottom: 20px; 
+}

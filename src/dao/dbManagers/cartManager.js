@@ -1,4 +1,3 @@
-// cart.manager.js
 const Carts = require('../models/cart.model');
 
 class CartManager {
@@ -14,7 +13,7 @@ class CartManager {
 
     async getCartById(cartId) {
         try {
-            return await Cart.findById(cartId).populate('products');
+            return await Cart.findById(cartId).populate('products'); //agregar .lean()
         } catch (error) {
             console.error('Error getting cart by ID:', error);
             throw new Error('Internal server error');

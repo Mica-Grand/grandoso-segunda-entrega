@@ -1,7 +1,7 @@
-// carts.router.js
 const { Router } = require('express');
 const router = Router();
 
+// Obtener un carrito por su ID
 
 router.get('/:cid', async (req, res) => {
     try {
@@ -20,6 +20,8 @@ router.get('/:cid', async (req, res) => {
     }
 });
 
+// Actualizar un carrito por su ID
+
 router.put('/:cid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
@@ -33,6 +35,8 @@ router.put('/:cid', async (req, res) => {
     }
 });
 
+//Eliminar carrito por ID
+
 router.delete('/:cid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
@@ -45,10 +49,11 @@ router.delete('/:cid', async (req, res) => {
     }
 });
 
+//Eliminar producto de carritom por ID
+
 router.delete('/:cid/products/:pid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
-
         const cartId = req.params.cid;
         const productId = req.params.pid;
 
@@ -64,10 +69,10 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     }
 });
 
+// Actualizar cantidad de producto en carrito por ID
 router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
-
         const cartId = req.params.cid;
         const productId = req.params.pid;
         const quantity = req.body.quantity;
