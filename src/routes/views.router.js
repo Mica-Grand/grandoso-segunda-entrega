@@ -42,7 +42,7 @@ router.get('/carts/:cid', async (req, res) => {
         const cartManager = req.app.get("cartManager");
         const cart = await cartManager.getCartById(req.params.cid);
         res.render('cart', { 
-            products: cart,
+            cart,
             styles: ['styles.css']
          });
     } catch (error) {

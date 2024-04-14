@@ -39,12 +39,12 @@ router.put('/:cid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
         const cartId = req.params.cid;
-        const products = req.body;
+        const products = req.body.products;
         const updatedCart = await cartManager.updateCart(cartId, products);
         res.json({ status: 'success', payload: updatedCart });
     } catch (error) {
         console.error('Error updating cart:', error);
-        res.status(500).json({ status: 'error', error: 'Internal server error' });
+        res.status(500).json({ status: 'error', error: error.message });
     }
 });
 
@@ -63,22 +63,21 @@ router.delete('/:cid', async (req, res) => {
 });
 
 //Eliminar producto de carritom por ID
-
 router.delete('/:cid/products/:pid', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
         const cartId = req.params.cid;
         const productId = req.params.pid;
 
-        if (!cartId ||!productId) {
+        if (!cartId || !productId) {
             throw new Error('Invalid cart ID or product ID');
         }
 
-        const updatedCart = await cartManager.deleteProductFromCart(cartId, productId);
-        res.json({ status: 'success', payload: updatedCart });
+        const deletedProduct = await cartManager.deleteProductFromCart(cartId, productId); 
+        res.json({ status: 'success', payload: deletedProduct });
     } catch (error) {
         console.error('Error deleting product from cart:', error);
-        res.status(500).json({ status: 'error', error: 'Internal server error' }); 
+        res.status(500).json({ status: 'error', error: 'Internal server error' });
     }
 });
 

@@ -1,4 +1,5 @@
 const CartModel = require('../models/cart.model');
+const ProductModel = require('../models/product.model');
 
 class CartManager {
     constructor() {}
@@ -22,52 +23,88 @@ class CartManager {
             throw error;
         }
     }
-
     async getCartById(cartId) {
         try {
-            const cart = await CartModel.findOne({ _id: cartId }).populate('products').lean();
-
-            return cart ?
-            cart.products
-            : [];
-            
+            const cart = await CartModel.findOne({ _id: cartId }).populate('products.product').lean();
+            return cart ? cart : null;
         } catch (error) {
-            console.error("Error obtaining product by ID:", error);
+            console.error("Error obtaining cart by ID:", error);
             return null;
         }
     }
-
     async updateCart(cartId, products) {
         try {
-            const updatedCart = await CartModel.findByIdAndUpdate({ _id: cartId }, { products }, { new: true }).populate('products');
-            return updatedCart;
+            let cart = await CartModel.findById(cartId);
+            if (!cart) {
+                throw new Error('Cart not found');
+            }
+
+            const productIds = products.map(product => product.product);
+            const existingProducts = await ProductModel.find({ _id: { $in: productIds } }).lean();
+            if (existingProducts.length !== productIds.length) {
+                throw new Error('One or more products not found');
+            }
+
+            // Reemplazar el array de productos del carrito con el nuevo array
+            cart.products = products;
+            await cart.save();
+
+
+            return cart;
         } catch (error) {
             console.error('Error updating cart:', error);
-            throw new Error('Internal server error');
+            throw error;
         }
     }
 
-    async deleteProductFromCart(cartId, productId) {
+
+    async deleteProductFromCart( cartId, productId) {
         try {
-            const updatedCart = await CartModel.findByIdAndUpdate({ _id: cartId }, { $pull: { products: productId } }, { new: true }).populate('products');
-            return updatedCart;
+            let cart = await CartModel.findById(cartId);
+            
+            // Verificar si el carrito existe
+            if (!cart) {
+                throw new Error('Cart not found');
+            }
+    
+            // Filtrar el array de productos para eliminar el producto con el ID dado
+            cart.products = cart.products.filter(product => product.product.toString() !== productId);
+    
+            // Guardar el carrito actualizado en la base de datos
+            await cart.save();
+    
+            // Retornar el carrito actualizado
+            return cart;
         } catch (error) {
-            console.error('Error deleting product from cart:', error);
+            console.error('Error deleting product:', error);
             throw new Error('Internal server error');
         }
     }
 
     async updateProductQuantity(cartId, productId, quantity) {
         try {
-            const updatedCart = await CartModel.findOneAndUpdate(
-                { _id: cartId, 'products._id': productId },
-                { $set: { 'products.$.quantity': quantity } },
-                { new: true }
-            ).populate('products');
-            return updatedCart;
+            const cart = await CartModel.findById(cartId).lean();
+            if (!cart) {
+                throw new Error('Cart not found');
+            }
+    
+            // Encontar el índice del producto en el array de productos del carrito
+            const productIndex = cart.products.findIndex(product => product.product.toString() === productId);
+            if (productIndex === -1) {
+                throw new Error('Product not found in cart');
+            }
+    
+            // Actualizar la cantidad del producto en el carrito
+            cart.products[productIndex].quantity = quantity;
+    
+            // Guardar los cambios en el carrito
+            await cart.save();
+    
+            // Retornar el carrito actualizado
+            return cart;
         } catch (error) {
             console.error('Error updating product quantity in cart:', error);
-            throw new Error('Internal server error');
+            throw error;
         }
     }
 

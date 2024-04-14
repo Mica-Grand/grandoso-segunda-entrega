@@ -1,15 +1,15 @@
 <h1>Cart</h1>
-    <ul>
-        {{#each products}}
-            <li>
-                <h2>{{title}}</h2>
-                <p>{{description}}</p>
-                <p>Price: {{price}}</p>
-                <p>Category: {{category}}</p>
-                <form action="/carts/{{../cart._id}}/products/{{_id}}" method="DELETE">
-                    <button type="submit">Remove from Cart</button>
-                </form>
-            </li>
-        {{/each}}
-    </ul>
+<ul>
+    {{#each cart.products}} 
+    <li>
+        <h2>{{this.product.title}}</h2> 
+        <p>{{this.product.description}}</p>
+        <p>Price: {{this.product.price}}</p>
+        <p>Category: {{this.product.category}}</p>
+        <form action="" method="DELETE">
+            <button type="submit">Remove from Cart</button>
+        </form>
+    </li>
+    {{/each}}
+</ul>
 </body>
