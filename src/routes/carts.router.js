@@ -1,6 +1,19 @@
 const { Router } = require('express');
 const router = Router();
 
+
+
+router.post('/', async (req, res) => {
+    try {
+        const cartManager = req.app.get('cartManager');
+        const newCart = await cartManager.createCart();
+        res.status(201).json(newCart);
+        console.log(newCart);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating new cart'});
+    }
+});
+
 // Obtener un carrito por su ID
 
 router.get('/:cid', async (req, res) => {
@@ -65,7 +78,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
         res.json({ status: 'success', payload: updatedCart });
     } catch (error) {
         console.error('Error deleting product from cart:', error);
-        res.status(500).json({ status: 'error', error: 'Internal server error' }); // corrected line
+        res.status(500).json({ status: 'error', error: 'Internal server error' }); 
     }
 });
 

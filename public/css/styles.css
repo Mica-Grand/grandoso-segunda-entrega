@@ -5,9 +5,8 @@
     height: 150px;
 };
 
-.title {
-    color: blue;
-    text-transform: uppercase;
+h2 .product-title {
+    text-transform: uppercase !important;
 }
 
 .margin {

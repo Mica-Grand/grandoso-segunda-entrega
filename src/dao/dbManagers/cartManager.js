@@ -1,28 +1,45 @@
-const Carts = require('../models/cart.model');
+const CartModel = require('../models/cart.model');
 
 class CartManager {
     constructor() {}
 
     async prepare() {
 
-        if (Carts.db.readyState !== 1) {
+        if (CartModel.db.readyState !== 1) {
             throw new Error('must connect to mongodb!')
         }
     }
 
+    async createCart() {
+        try {
+            
+        await CartModel.create({
+                products: []
+            });
+
+        } catch (error) {
+            console.error("Error creating Cart:", error);
+            throw error;
+        }
+    }
 
     async getCartById(cartId) {
         try {
-            return await Cart.findById(cartId).populate('products'); //agregar .lean()
+            const cart = await CartModel.findOne({ _id: cartId }).populate('products').lean();
+
+            return cart ?
+            cart.products
+            : [];
+            
         } catch (error) {
-            console.error('Error getting cart by ID:', error);
-            throw new Error('Internal server error');
+            console.error("Error obtaining product by ID:", error);
+            return null;
         }
     }
 
     async updateCart(cartId, products) {
         try {
-            const updatedCart = await Cart.findByIdAndUpdate(cartId, { products }, { new: true }).populate('products');
+            const updatedCart = await CartModel.findByIdAndUpdate({ _id: cartId }, { products }, { new: true }).populate('products');
             return updatedCart;
         } catch (error) {
             console.error('Error updating cart:', error);
@@ -32,7 +49,7 @@ class CartManager {
 
     async deleteProductFromCart(cartId, productId) {
         try {
-            const updatedCart = await Cart.findByIdAndUpdate(cartId, { $pull: { products: productId } }, { new: true }).populate('products');
+            const updatedCart = await CartModel.findByIdAndUpdate({ _id: cartId }, { $pull: { products: productId } }, { new: true }).populate('products');
             return updatedCart;
         } catch (error) {
             console.error('Error deleting product from cart:', error);
@@ -42,7 +59,7 @@ class CartManager {
 
     async updateProductQuantity(cartId, productId, quantity) {
         try {
-            const updatedCart = await Cart.findOneAndUpdate(
+            const updatedCart = await CartModel.findOneAndUpdate(
                 { _id: cartId, 'products._id': productId },
                 { $set: { 'products.$.quantity': quantity } },
                 { new: true }
@@ -56,7 +73,7 @@ class CartManager {
 
     async clearCart(cartId) {
         try {
-            await Cart.findByIdAndUpdate(cartId, { products: [] });
+            await CartModel.findByIdAndUpdate({ _id: cartId }, { products: [] });
         } catch (error) {
             console.error('Error clearing cart:', error);
             throw new Error('Internal server error');

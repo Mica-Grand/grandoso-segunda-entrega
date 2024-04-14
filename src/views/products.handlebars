@@ -1,9 +1,9 @@
-<h1 class="title">All Products</h1>
+<h1>All Products</h1>
 <div>
     {{#each products}}
     <div class="margin">
 
-        <h2>{{title}}</h2>
+        <h2 class="product-title">{{title}}</h2>
         <img src="{{{thumbnails}}}" class="product-image" alt="{{title}} Thumbnail">
         <p>Price: {{price}}</p>
         <p>Category: {{category}}</p>
@@ -21,12 +21,12 @@
     <ul class="pagination justify-content-center">
         <!-- Previous Page Link -->
         <li class="page-item {{#unless hasPrevPage}}disabled{{/unless}}">
-            <a class="page-link" href="{{#if hasPrevPage}}/products?page={{prevPage}}{{else}}#{{/if}}">Previous</a>
+            <a class="page-link" href="{{#if hasPrevPage}}/products?page={{prevPage}}{{else}}#{{/if}}">Previous Page</a>
         </li>
 
         <!-- Next Page Link -->
         <li class="page-item {{#unless hasNextPage}}disabled{{/unless}}">
-            <a class="page-link" href="{{#if hasNextPage}}/products?page={{nextPage}}{{else}}#{{/if}}">Next</a>
+            <a class="page-link" href="{{#if hasNextPage}}/products?page={{nextPage}}{{else}}#{{/if}}">Next Page</a>
         </li>
     </ul>
 </nav>
