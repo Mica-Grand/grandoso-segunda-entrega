@@ -83,7 +83,7 @@ class CartManager {
 
     async updateProductQuantity(cartId, productId, quantity) {
         try {
-            const cart = await CartModel.findById(cartId).lean();
+            const cart = await CartModel.findById(cartId);
             if (!cart) {
                 throw new Error('Cart not found');
             }

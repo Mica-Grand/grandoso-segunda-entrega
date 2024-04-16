@@ -56,7 +56,7 @@ router.get('/carts/:cid', async (req, res) => {
 
 router.get('/', async (_, res) => {
     try {
-        res.json('Hola. Este es mi ejercisio de Ecommerce con Mongoose. Navega a /productos para ver el catálogo');
+        res.json('Hola. Este es mi ejercicio de Ecommerce con Mongoose. Navega a http://localhost:8080/products para ver el catálogo');
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ error: 'Internal server error' });
