@@ -15,12 +15,13 @@ class ProductManager {
     async getAll(queryParams) {
         try {
             let { page = 1, limit = 10, sort, category, availability } = queryParams;
-            const options = {
-                sort: sort ? { price: sort } : undefined,
-                limit: parseInt(limit),
-                page: parseInt(page),
-                lean: true
-            };
+
+        const options = {
+            sort: sort ? { price: sort } : undefined,
+            limit: parseInt(limit),
+            page: parseInt(page),
+            lean: true
+        };
             const queryObject = {};
 
         if (category) {

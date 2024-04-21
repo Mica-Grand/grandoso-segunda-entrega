@@ -8,7 +8,7 @@ router.post('/', async (req, res) => {
         const cartManager = req.app.get('cartManager');
         const newCart = await cartManager.createCart();
         res.status(201).json(newCart);
-        console.log(newCart);
+        console.log("New cart created:", newCart);
     } catch (error) {
         res.status(500).json({ error: 'Error creating new cart'});
     }

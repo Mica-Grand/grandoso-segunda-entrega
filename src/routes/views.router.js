@@ -3,8 +3,13 @@ const router = Router();
 
 router.get('/products', async (req, res) => {
     try {
+       
         const productManager = req.app.get("productManager");
         const productsData = await productManager.getAll(req.query);
+        if (isNaN(productsData.page) || productsData.page < 1 || productsData.page > productsData.totalPages) {
+            return res.render('error', { errorMessage: 'Invalid page number' });
+        }
+
         res.render('products', { 
             products: productsData.payload, 
             styles: ['styles.css'],
@@ -15,7 +20,7 @@ router.get('/products', async (req, res) => {
             hasNextPage: productsData.hasNextPage
         }); 
     } catch (error) {
-        console.error('Error while retrieving th: e list of products: ', error);
+        console.error('Error while retrieving the list of products: ', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

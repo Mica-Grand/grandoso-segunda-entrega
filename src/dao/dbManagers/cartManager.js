@@ -14,9 +14,10 @@ class CartManager {
     async createCart() {
         try {
             
-        await CartModel.create({
+       const newCart = await CartModel.create({
                 products: []
             });
+            return newCart._id;
 
         } catch (error) {
             console.error("Error creating Cart:", error);
@@ -39,6 +40,10 @@ class CartManager {
                 throw new Error('Cart not found');
             }
 
+            if (!Array.isArray(products)) {
+                throw new Error('Products should be an array');
+            }
+            
             const productIds = products.map(product => product.product);
             const existingProducts = await ProductModel.find({ _id: { $in: productIds } }).lean();
             if (existingProducts.length !== productIds.length) {
