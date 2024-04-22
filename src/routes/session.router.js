@@ -1,33 +1,69 @@
 const { Router } = require('express')
 const User = require('../dao/models/user.model')
+const { userIsLoggedIn, userIsNotLoggedIn } = require('../middlewares/auth.middleware' );
+const { hashPassword, isValidPassword } = require('../utils/hashing')
 
 const router = Router()
 
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body
-
-    // 1. verificar que el usuario exista en la BD
-    const user = await User.findOne({ email, password })
-    if (!user) {
-        return res.status(400).send('Invalid email or password!')
+router.post('/login', userIsNotLoggedIn, async (req, res) => {
+    try {
+        const { email, password } = req.body
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Invalid credentials!' })
     }
+        const user = await User.findOne({ email });
 
-    // 2. crear nueva sesión si el usuario existe
-    req.session.user = { id: user._id.toString(), email: user.email }
-    res.redirect('/')
-})
+        if (!user) {
+            return res.status(401).json({ error: 'User not found!' })
+        }
+    
+        if (!isValidPassword(password, user.password)) {
+            return res.status(401).json({ error: 'Invalid password!' })
+        }
 
-router.post('/register', async (req, res) => {
-    const { firstName, lastName, email, age, password } = req.body
+        req.session.user = {
+          email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          age: user.age,
+          _id: user._id.toString(),
+          role: user.email === "adminCoder@coder.com" ? "admin" : "user",
+        };
+
+        console.log(req.session.user);
+
+        res.redirect('/products');
+
+    } catch (error) {
+        console.error('Error while logging in: ', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post('/register', userIsNotLoggedIn, async (req, res) => {
 
     try {
-        await User.create({
+        const { firstName, lastName, email, age, password } = req.body
+
+       const user = await User.create({
             firstName,
             lastName,
             age: +age,
             email,
-            password
+            password: hashPassword(password)
+            
+
         })
+        req.session.user = { 
+            email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id.toString(),
+            role: user.email === "adminCoder@coder.com" ? "admin" : "user",
+            age: user.age
+        };
+
+        console.log(req.session.user);
 
         res.redirect('/')
     }
@@ -36,5 +72,13 @@ router.post('/register', async (req, res) => {
         res.status(400).send('Error creating user!')
     }
 })
+
+router.get('/logout', userIsLoggedIn, (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    });
+});
+
+
 
 module.exports = router

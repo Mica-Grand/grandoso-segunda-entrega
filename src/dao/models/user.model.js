@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
         unique: true
     },
     password: String,
+ 
 })
 
 module.exports = mongoose.model('User', schema, 'users')

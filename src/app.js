@@ -3,24 +3,22 @@ const handlebars = require('express-handlebars')
 const mongoose = require('mongoose')
 const ProductManager = require('./dao/dbManagers/productManager')
 const CartManager = require('./dao/dbManagers/cartManager')
+const sessionRouter = require('./routes/session.router')
+const sessionMiddleware = require('./session/mongoStorage')
 const cookieParser = require('cookie-parser')
-const session = require('express-session')
+
 
 const app = express()
+
+app.use(cookieParser())
+
+
 // permitir envío de información mediante formularios y JSON
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-//cookies
-app.use(cookieParser("MicaSecret"))
+app.use(sessionMiddleware)
 
-//session
-
-app.use(session({
-    secret: "MicaSecret",
-    resave: true,
-    saveUninitialized: true
-}))
 
 const viewsRouter = require('./routes/views.router')
 const productsRouter = require('./routes/products.router')
@@ -36,6 +34,11 @@ app.use(express.static(`${__dirname}/../public`));
 app.use('/', viewsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/api/sessions', sessionRouter)
+
+
+
+
 
 const main = async () => {
         await mongoose.connect('mongodb+srv://el12del8:Ramiro20@codertest.jek84kt.mongodb.net/', {
